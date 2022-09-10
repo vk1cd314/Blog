@@ -6,5 +6,6 @@ theme = 'cactus'
 [params]
   minimal = false
   excerpts = false
+  colortheme = 'dark'
   description = "Hello there you somehow managed to get here, congrats on that, this just happens to be my blog"
 
