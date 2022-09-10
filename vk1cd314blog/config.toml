@@ -1,0 +1,4 @@
+baseURL = 'https://vk1cd314.github.io/'
+languageCode = 'en-us'
+title = 'vk1cd314 Blog'
+theme = 'contrast-hugo'

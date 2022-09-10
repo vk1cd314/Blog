@@ -1,0 +1,4 @@
+[submodule "vk1cd314blog/vk1cd314.github.io"]
+	path = vk1cd314blog/vk1cd314.github.io
+	url = https://github.com/vk1cd314/vk1cd314.github.io.git
+	branch = main
