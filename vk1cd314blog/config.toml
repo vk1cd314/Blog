@@ -1,4 +1,10 @@
 baseURL = 'https://vk1cd314.github.io/'
 languageCode = 'en-us'
-title = 'vk1cd314 Blog'
-theme = 'contrast-hugo'
+title = 'A weird person wrote this, probably'
+author = 'Me'
+theme = 'cactus'
+[params]
+  minimal = false
+  excerpts = false
+  description = "Hello there you somehow managed to get here, congrats on that, this just happens to be my blog"
+
