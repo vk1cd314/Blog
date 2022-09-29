@@ -113,23 +113,22 @@ If the connection is established successfully the *conn* object produces an *inp
 
 ```kotlin
 override fun doInBackground(vararg param: String?): JSONObject {  
-  
-  val url = URL("$api_url/${param[0]}")  
-  val conn = url.openConnection() as HttpURLConnection  
-  conn.requestMethod = "GET"  
-  conn.connect()  
-  
-  val inputStream = InputStreamReader(conn.inputStream)  
-  val reader = BufferedReader(inputStream)  
-  
-  val output = StringBuilder() 
-  
-  var line: String?;  
-  while(reader.readLine().also { line = it} != null) {  // reader sends api responce as input stream
-      output.append(line)  
-  }  
-  
-  return JSONObject(output.toString())  
+	  val url = URL("$api_url/${param[0]}")  
+	  val conn = url.openConnection() as HttpURLConnection  
+	  conn.requestMethod = "GET"  
+	  conn.connect()  
+	
+	  val inputStream = InputStreamReader(conn.inputStream)  
+	  val reader = BufferedReader(inputStream)  
+	
+	  val output = StringBuilder() 
+	
+	  var line: String?;  
+	  while(reader.readLine().also { line = it} != null) {  // reader sends api responce as input stream
+	      output.append(line)  
+	  }  
+	
+	  return JSONObject(output.toString())  
 }
 ```
 
@@ -139,7 +138,7 @@ To view the result, we can print the result inside the *onPostExecute* method to
 
 ```kotlin
 override fun onPostExecute(result: JSONObject?) {  
-  Log.i(tag, result!!.toString())  
+  	Log.i(tag, result!!.toString())  
 }
 ```
 
@@ -149,24 +148,23 @@ During the *doInBackground* method we could keep track of the progress of the ne
 
 ```kotlin 
 override fun doInBackground(vararg param: String?): JSONObject {  
-  
-  val url = URL("$api_url/${param[0]}")  
-  val conn = url.openConnection() as HttpURLConnection  
-  conn.requestMethod = "GET"  
-  conn.connect()  
-  
-  val inputStream = InputStreamReader(conn.inputStream)  
-  val reader = BufferedReader(inputStream)  
-  
-  val output = StringBuilder()  
-  
-  var line: String?;  
-  while(reader.readLine().also { line = it} != null) {  
-      publishProgress() // PROGRESS UPDATE  
-      output.append(line)  
-  }  
-  Log.i(tag, output.toString())  
-  return output.toString();  
+	  val url = URL("$api_url/${param[0]}")  
+	  val conn = url.openConnection() as HttpURLConnection  
+	  conn.requestMethod = "GET"  
+	  conn.connect()  
+	
+	  val inputStream = InputStreamReader(conn.inputStream)  
+	  val reader = BufferedReader(inputStream)  
+	
+	  val output = StringBuilder()  
+	
+	  var line: String?;  
+	  while(reader.readLine().also { line = it} != null) {  
+	      publishProgress() // PROGRESS UPDATE  
+	      output.append(line)  
+	  }  
+	  Log.i(tag, output.toString())  
+	  return output.toString();  
 }
 ```
 
@@ -181,7 +179,7 @@ override fun onProgressUpdate(vararg values: Void?) {
 
 The task can also be canceled at any point in time by calling the cancel(boolean) method. This will execute the *onCancelled()* methode. It is always a good idea to override this methode
 
-```kotllin
+```kotlin
 override fun onCancelled () {
 	Log.e(tag, "API call was cancelled")
 }
@@ -192,7 +190,7 @@ We can call make this task execute from the UI thread by using an object of this
 ```kotlin
 val fetchButton: Button = findViewById(R.id.mangadexfetch)  
 fetchButton.setOnClickListener {  
-  ApiCall().execute("manga")  
+  	ApiCall().execute("manga")  
 }
 ```
 
@@ -213,7 +211,7 @@ This passes the argument “manga” into the AsyncTask and keeps it functioning
 AndroidRuntime: FATAL EXCEPTION: AsyncTask #1
 Process: com.tsunderead.kotlin_api, PID: 8732
 ```
->> This can be due to a wrong api URL or a weak internet
+> This can be due to a wrong api URL or a weak internet
 
 Any Error critical error calls the onCancelled() methode. It is a good point to debug network call errors
 
