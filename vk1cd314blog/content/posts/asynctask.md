@@ -15,7 +15,7 @@ For this tutorial we shall use AsyncTask to make a “GET” request to a API an
 ## Declaration
 AsyncTask is an abstract generic class that needs to be implemented to use its functionality. To make a class extend AsyncTask, the generic class needs three parameters - 
 
--   *Parameters* - to pass onto any parameter into class
+-   *Parameters* - to pass onto any parameter into class, used as parmeters for the network call
 -   *Progress* - To keep track of progress updates
 -   *Result* - Format of the result expected
 
@@ -26,11 +26,11 @@ class ApiCall: AsyncTask<String, Void, String>() {
 }
 ```
 
-AsyncTask is an abstract method and as suggested by the squiggly lines under *ApiCall* we need to override some of the methods in the class. The only method we must override is *doInBackground.* This method accepts a variable list of “Params” type arguments and returns the result. We passed a String type for the parameters so our *doInBackground* has a variable list of strings. It returns String since we expect a result of String type.
+AsyncTask is an abstract method. We need to override some of the methods in the class. The only method compulsory to override is *doInBackground.* This method accepts a variable list of “Params” type arguments and returns the result. We passed a String type for the parameters so our *doInBackground* has a variable list of strings. We expect a JSONObject responce from out api, so the *Result* is JSOBObject type.
 
 ```kotlin 
-class ApiCall: AsyncTask<String, Void, String>() {  
-    override fun doInBackground(vararg param: String?): String? {  
+class ApiCall: AsyncTask<String, Void, JSONObject>() {  
+    override fun doInBackground(vararg param: String?): JSONObject? {  
         return null  
     }
 }
@@ -45,13 +45,13 @@ This method does the heavy lifting of the network call and actions inside it are
 The skeleton of our *ApiCall* now looks like this
 
 ```kotlin
-class ApiCall: AsyncTask<String, Void, String>() {  
+class ApiCall: AsyncTask<String, Void, JSONObject>() {  
   
     override fun onPreExecute() {  
        
     }  
   
-    override fun doInBackground(vararg param: String?): String? {  
+    override fun doInBackground(vararg param: String?): JSONObject? {  
   
         return null  
     }  
@@ -60,7 +60,7 @@ class ApiCall: AsyncTask<String, Void, String>() {
          
     }  
   
-    override fun onPostExecute(result: String?) {  
+    override fun onPostExecute(result: JSONObject?) {  
   
     }  
   
@@ -92,8 +92,7 @@ For the API call we store the link to the API in a constant and keep a variable 
 
 ```kotlin
 	val tag = "API - call"  
-    val api_url = "https://api.mangadex.org"  
-    val output = StringBuilder();  
+    val api_url = "https://api.mangadex.org"
   
     override fun doInBackground(vararg param: String?): String {  
         val endpoint = param[0]  
@@ -103,6 +102,9 @@ For the API call we store the link to the API in a constant and keep a variable 
         val conn = url.openConnection() as HttpURLConnection  
         conn.requestMethod = "GET"  
         conn.connect()  
+
+		val output = StringBuilder()
+		
         return output.toString();  
     }
 ```
@@ -110,7 +112,7 @@ For the API call we store the link to the API in a constant and keep a variable 
 If the connection is established successfully the *conn* object produces an *inputStream* that we can read using basic IO
 
 ```kotlin
-override fun doInBackground(vararg param: String?): String {  
+override fun doInBackground(vararg param: String?): JSONObject {  
   
   val url = URL("$api_url/${param[0]}")  
   val conn = url.openConnection() as HttpURLConnection  
@@ -120,14 +122,14 @@ override fun doInBackground(vararg param: String?): String {
   val inputStream = InputStreamReader(conn.inputStream)  
   val reader = BufferedReader(inputStream)  
   
-  output.clear()  
+  val output = StringBuilder() 
   
   var line: String?;  
-  while(reader.readLine().also { line = it} != null) {  
+  while(reader.readLine().also { line = it} != null) {  // reader sends api responce as input stream
       output.append(line)  
   }  
   
-  return output.toString();  
+  return JSONObject(output.toString())  
 }
 ```
 
@@ -136,15 +138,17 @@ We create an *inputStream* object from the connection and read it using a *Buffe
 To view the result, we can print the result inside the *onPostExecute* method to check if the network call returned our expected value. This method is called immediately after the *doInBackground* method with the returned result.
 
 ```kotlin
-override fun onPostExecute(result: String?) {  
-  Log.i(tag, result!!)  
+override fun onPostExecute(result: JSONObject?) {  
+  Log.i(tag, result!!.toString())  
 }
 ```
+
+Expected Log can be seen on this link: https://api.mangadex.org/manga
 
 During the *doInBackground* method we could keep track of the progress of the network call. Say we pass a list of endpoints and are making calls to each one of them. We can keep updating the progress by calling the *publishProgress(Progress)* method.
 
 ```kotlin 
-override fun doInBackground(vararg param: String?): String {  
+override fun doInBackground(vararg param: String?): JSONObject {  
   
   val url = URL("$api_url/${param[0]}")  
   val conn = url.openConnection() as HttpURLConnection  
@@ -154,7 +158,7 @@ override fun doInBackground(vararg param: String?): String {
   val inputStream = InputStreamReader(conn.inputStream)  
   val reader = BufferedReader(inputStream)  
   
-  output.clear()  
+  val output = StringBuilder()  
   
   var line: String?;  
   while(reader.readLine().also { line = it} != null) {  
@@ -175,7 +179,13 @@ override fun onProgressUpdate(vararg values: Void?) {
 ```
 
 
-The task can also be canceled at any point in time by calling the cancel(boolean) method. This will make the *onCancelled()* method on the class return true from thereon.
+The task can also be canceled at any point in time by calling the cancel(boolean) method. This will execute the *onCancelled()* methode. It is always a good idea to override this methode
+
+```kotllin
+override fun onCancelled () {
+	Log.e(tag, "API call was cancelled")
+}
+```
 
 We can call make this task execute from the UI thread by using an object of this class and calling it’s *execute()* method. To make a network call on the press of a button we could do the following
 
@@ -196,4 +206,21 @@ This passes the argument “manga” into the AsyncTask and keeps it functioning
 2. **Task can be created and executed on the UI thread only.**
 
 3. **Task can be executed only once.**
+
+## Errors to Expect
+1. If the network connection cannot be established, a runtime exception  is thrown  
+```kotlin
+AndroidRuntime: FATAL EXCEPTION: AsyncTask #1
+Process: com.tsunderead.kotlin_api, PID: 8732
+```
+>> This can be due to a wrong api URL or a weak internet
+
+Any Error critical error calls the onCancelled() methode. It is a good point to debug network call errors
+
+## Referenes
+1. [AsyncTask theory](https://youtu.be/zHGgSd1wvxY)
+2. [AsyncTask implementation](https://youtu.be/EThkglxLxSM)
+3. [AsyncTask documentation](https://developer.android.com/reference/kotlin/android/os/AsyncTask)
+4. [HttpURLConnection documentation](https://developer.android.com/reference/kotlin/java/net/HttpURLConnection)
+
 
