@@ -207,7 +207,7 @@ This passes the argument “manga” into the AsyncTask and keeps it functioning
 
 ## Errors to Expect
 1. If the network connection cannot be established, a runtime exception  is thrown  
-```kotlin
+```bash
 AndroidRuntime: FATAL EXCEPTION: AsyncTask #1
 Process: com.tsunderead.kotlin_api, PID: 8732
 ```
@@ -221,4 +221,5 @@ Any Error critical error calls the onCancelled() methode. It is a good point to 
 3. [AsyncTask documentation](https://developer.android.com/reference/kotlin/android/os/AsyncTask)
 4. [HttpURLConnection documentation](https://developer.android.com/reference/kotlin/java/net/HttpURLConnection)
 
-
+## Git Repository 
+https://github.com/master-da/kotlin-api
