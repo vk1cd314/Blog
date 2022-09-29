@@ -213,7 +213,7 @@ Process: com.tsunderead.kotlin_api, PID: 8732
 ```
 > This can be due to a wrong api URL or a weak internet
 
-Any Error critical error calls the onCancelled() methode. It is a good point to debug network call errors
+Any critical error calls the onCancelled() method. Overriding this method is a good practice to debug network call errors.
 
 ## Referenes
 1. [AsyncTask theory](https://youtu.be/zHGgSd1wvxY)
