@@ -5,7 +5,7 @@ date: 2022-09-10T20:23:16+06:00
 
 # AsyncTask
 > This tutorial on AsyncTask is for the kotlin programming language. It can easily be adapted for the java programming language
-> All source codes can be found in the GIt Repositroy linked
+> All source codes can be found in the Git Repositroy linked
 
 A program running on a single thread performs its tasks synchronously - meaning it waits till one task is complete till starting with another. On an android application UI runs on the main thread. The rendering of UI takes place in microsecond range. So for tasks like network calls that take significantly more time (in the millisecond range), the UI thread would be held up while the other task is finished if both were run on the main thread.
 
@@ -215,7 +215,7 @@ public interface NetworkCaller<T> {
 The caller object must override this interface and pass itself onto the AsyncTask object that is creates to allow the AsyncTask to execute these methodes when they need. Modify the caller activity to override the *NetworkCaller* interface. Now we can pass the caller object into the AsyncTask.
 
 ```kotlin
-class MainActivity : AppCompatActivity(), NetworkCaller<JSONObject> { // implenets the NetworkCaller interface with the expected result type *JSONObject*
+class AsyncTaskActivity : AppCompatActivity(), NetworkCaller<JSONObject> { // implenets the NetworkCaller interface with the expected result type *JSONObject*
 
     private val tag = "Main";
 
@@ -252,6 +252,12 @@ override fun onCancelled () {
 	parent.onNetworkCallFail()
 }
 ```
+
+## Welcome Page
+![Page 1](./AsyncTask1.png)
+
+## Network Call Page
+![Page 2](./AsyncTask2.png)
 
 ## Cautions
 
