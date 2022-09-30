@@ -124,7 +124,7 @@ override fun doInBackground(vararg param: String?): JSONObject {
 	  val output = StringBuilder() 
 	
 	  var line: String?;  
-	  while(reader.readLine().also { line = it} != null) {  // reader sends api responce as input stream
+	  while(reader.readLine().also { line = it } != null) {  // reader sends api responce as input stream
 	      output.append(line)  
 	  }  
 	
@@ -159,7 +159,7 @@ override fun doInBackground(vararg param: String?): JSONObject {
 	  val output = StringBuilder()  
 	
 	  var line: String?;  
-	  while(reader.readLine().also { line = it} != null) {  
+	  while(reader.readLine().also { line = it } != null) {  
 	      publishProgress() // PROGRESS UPDATE  
 	      output.append(line)  
 	  }  
@@ -172,7 +172,7 @@ Every time we call the *publishProgress()* method, the task calls the *onProgres
 
 ```kotlin 
 override fun onProgressUpdate(vararg values: Void?) {  
-  Log.i(tag, "New Line Received")  
+  	Log.i(tag, "New Line Received")  
 }
 ```
 
