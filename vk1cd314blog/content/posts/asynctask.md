@@ -5,6 +5,7 @@ date: 2022-09-10T20:23:16+06:00
 
 # AsyncTask
 > This tutorial on AsyncTask is for the kotlin programming language. It can easily be adapted for the java programming language
+> All source codes can be found in the GIt Repositroy linked
 
 A program running on a single thread performs its tasks synchronously - meaning it waits till one task is complete till starting with another. On an android application UI runs on the main thread. The rendering of UI takes place in microsecond range. So for tasks like network calls that take significantly more time (in the millisecond range), the UI thread would be held up while the other task is finished if both were run on the main thread.
 
@@ -278,4 +279,6 @@ Any critical error calls the onCancelled() method. Overriding this method is a g
 4. [HttpURLConnection documentation](https://developer.android.com/reference/kotlin/java/net/HttpURLConnection)
 
 ## Git Repository 
+
+All source codes can be found on this repository
 https://github.com/master-da/kotlin-api
