@@ -196,22 +196,78 @@ fetchButton.setOnClickListener {
 
 This passes the argument “manga” into the AsyncTask and keeps it functioning on another thread.
 
+## Communicatiung with other threads
+
+> This part of the tutorial is helpful only if you need the AsyncTask responce elsewhere.
+
+After or during the network call, the thread from which it is called might need to communicate with the AsyncTask thread. Case in point - we want our users to see the data that we fetched from the api in the main thread. To allow the asyncTask to communitate with the main thread, we pass the parent object into the AsyncTask object. We need an interface to help with that.
+
+Create a generic interface *NetworkCalled* contains the methodes *onNetworkCallSuccess(Result)* and *onNetworkCallFail()*.
+
+```kotlin
+public interface NetworkCaller<T> {
+    void onNetworkCallSuccess(T t);
+    void onNetworkCallFail();
+}
+```
+
+The caller object must override this interface and pass itself onto the AsyncTask object that is creates to allow the AsyncTask to execute these methodes when they need. Modify the caller activity to override the *NetworkCaller* interface. Now we can pass the caller object into the AsyncTask.
+
+```kotlin
+class MainActivity : AppCompatActivity(), NetworkCaller<JSONObject> { // implenets the NetworkCaller interface with the expected result type *JSONObject*
+
+    private val tag = "Main";
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val apicallbutton = findViewById<Button>(R.id.presstoinvoteapi);
+        apicallbutton.setOnClickListener {
+            ApiCall(this).execute("manga") // passing *this* into ApiCall object
+        }
+    }
+
+	// Overrides NetworkCaller methodes
+    override fun onNetworkCallSuccess(result: JSONObject?) {
+        Log.i(tag, result.toString())
+    }
+
+    override fun onNetworkCallFail() {
+        Log.e(tag, "Network Call Failed")
+    }
+}
+```
+
+The ApiCall initialization now looks like `class ApiCall(val parent: NetworkCaller<JSONObject>): AsyncTask<String, Void, JSONObject>()` - Accepting a parent object that implements NetworkCaller.  We can now handle post_execute and network cancellations differently
+
+```kotlin
+// inside the ApiCall class
+override fun onPostExecute(result: JSONObject?) {
+	parent.onNetworkCallSuccess(result)
+}
+
+override fun onCancelled () {
+	parent.onNetworkCallFail()
+}
+```
 
 ## Cautions
 
 1. **The methods *onPreExecute(), onPostExecute(Result), doInBackground(Params...) and onProgressUpdate(Progress...)* SHOULD NEVER BE CALLED MANUALLY.  Use only the *execute()* method to start the task.** 
 
-2. **Task can be created and executed on the UI thread only.**
+2. **Tasks can be created and executed on the UI thread only.**
 
-3. **Task can be executed only once.**
+3. **A Task can be executed only once.**
 
 ## Errors to Expect
-1. If the network connection cannot be established, a runtime exception  is thrown  
+If the network connection cannot be established, a runtime exception  is thrown  
 ```bash
 AndroidRuntime: FATAL EXCEPTION: AsyncTask #1
 Process: com.tsunderead.kotlin_api, PID: 8732
 ```
 > This can be due to a wrong api URL or a weak internet
+> Verify the URL and check internet connection
 
 Any critical error calls the onCancelled() method. Overriding this method is a good practice to debug network call errors.
 
