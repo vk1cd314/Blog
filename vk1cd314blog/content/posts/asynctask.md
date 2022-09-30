@@ -254,10 +254,10 @@ override fun onCancelled () {
 ```
 
 ## Welcome Page
-![Page 1](./AsyncTask1.png)
+![Page 1](AsyncTask1.png)
 
 ## Network Call Page
-![Page 2](./AsyncTask2.png)
+![Page 2](AsyncTask2.png)
 
 ## Cautions
 
