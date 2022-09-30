@@ -288,3 +288,6 @@ Any critical error calls the onCancelled() method. Overriding this method is a g
 
 All source codes can be found on this repository
 https://github.com/master-da/kotlin-api
+
+## Comments
+{{< chat vk1cd314Blog >}}
