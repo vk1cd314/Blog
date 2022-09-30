@@ -196,13 +196,13 @@ fetchButton.setOnClickListener {
 
 This passes the argument “manga” into the AsyncTask and keeps it functioning on another thread.
 
-## Communicatiung with other threads
+## Communicating with other threads
 
 > This part of the tutorial is helpful only if you need the AsyncTask responce elsewhere.
 
 After or during the network call, the thread from which it is called might need to communicate with the AsyncTask thread. Case in point - we want our users to see the data that we fetched from the api in the main thread. To allow the asyncTask to communitate with the main thread, we pass the parent object into the AsyncTask object. We need an interface to help with that.
 
-Create a generic interface *NetworkCalled* contains the methodes *onNetworkCallSuccess(Result)* and *onNetworkCallFail()*.
+Create a generic interface *NetworkCaller* contains the methodes *onNetworkCallSuccess(Result)* and *onNetworkCallFail()*.
 
 ```kotlin
 public interface NetworkCaller<T> {
